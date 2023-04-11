@@ -1,20 +1,22 @@
 import { Helios } from "https://cdn.skypack.dev/helios-web?min";
 
+const fs = require('fs');
+const zlib = require('zlib');
+
+const nodes = {};
+
+fs.createReadStream('file.jsons.gz')
+  .pipe(zlib.createGunzip())
+  .on('data', (data) => {
+    const json = JSON.parse(data.toString());
+    nodes[parseInt(json.id_str)] = json;
+  })
+  .on('end', () => {
+    console.log(nodes);
+  });
+
 // Nodes are dictionaries (any key can be used as node properties)
-let nodes = {
-"0": {
-    label: "Node 0"
-},
-"1": {
-    label: "Node 1"
-},
-"2": {
-    label: "Node 2"
-},
-"3": {
-    label: "Node 3"
-},
-};
+
 
 // Edges are arrays of node ids
 let edges = [
