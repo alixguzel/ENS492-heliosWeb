@@ -8,8 +8,8 @@ console.log("Here")
 fetch("dataverse_files/networks/nodes/follower_profiles_2022-09.jsons.gz")
   .then(response => response.blob())
   .then(blob => {
-    const reader = new FileReader();
     console.log("Here2")
+    const reader = new FileReader();
     reader.onload = function() {
       const jsons = reader.result.split('\\n').filter(Boolean).map(JSON.parse);
 
@@ -74,7 +74,6 @@ async function processFiles() {
 }
 
 processFiles().then(() => console.log(edges));
-
 
 
 /*
