@@ -14,6 +14,9 @@ let nodes = {
 "3": {
     label: "Node 3"
 },
+"4": {
+  label: "Node 4"
+},
 };
 
 // Edges are arrays of node ids
@@ -33,6 +36,10 @@ let edges = [
 {
     source: "2",
     target: "3"
+},
+{
+  source: "4",
+  target: "3"
 }
 ];
 
