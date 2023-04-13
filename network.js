@@ -3,6 +3,29 @@ import { Helios } from "https://cdn.skypack.dev/helios-web?min";
 // Nodes are dictionaries (any key can be used as node properties)
 const nodes = {};
 
+console.log("Here")
+
+fetch("dataverse_files/networks/nodes/follower_profiles_2022-09.jsons.gz")
+  .then(response => response.blob())
+  .then(blob => {
+    const reader = new FileReader();
+    console.log("Here2")
+    reader.onload = function() {
+      const jsons = reader.result.split('\\n').filter(Boolean).map(JSON.parse);
+
+      for (let i = 0; i < jsons.length; i++) {
+        nodes[jsons[i].id_str] = jsons[i];
+        console.log("Here3")
+      }
+
+      console.log(nodes);
+    };
+    reader.readAsText(blob);
+  });
+
+console.log("Here4")
+
+/*
 fetch('dataverse_files/networks/nodes/follower_profiles_2022-09.jsons.gz')
   .then(response => response.blob())
   .then(blob => {
@@ -18,7 +41,7 @@ fetch('dataverse_files/networks/nodes/follower_profiles_2022-09.jsons.gz')
     };
     reader.readAsText(blob);
   });
-
+*/
 
 // Edges are arrays of node ids
 const edges = [];
