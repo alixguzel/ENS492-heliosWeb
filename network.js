@@ -23,7 +23,7 @@ fetch('dataverse_files/networks/nodes/follower_profiles_2022-09.jsons.gz')
 // Edges are arrays of node ids
 const edges = [];
 
-const mainFolder = "dataverse_files/networks/edges";
+const mainFolder = "dataverse_files/networks/edges/2022-09";
 
 function getFiles() {
   return fetch(mainFolder)
