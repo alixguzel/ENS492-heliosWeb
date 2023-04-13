@@ -8,7 +8,6 @@ fetch('dataverse_files/networks/nodes/follower_profiles_2022-09.jsons.gz')
   .then(blob => {
     const reader = new FileReader();
     reader.onload = function() {
-      const nodes = {};
       const jsons = JSON.parse(reader.result);
 
       for (let i = 0; i < jsons.length; i++) {
@@ -46,7 +45,6 @@ fetch('dataverse_files/networks/edges')
   });
 
 console.log(edges);
-
 
 
 let helios = new Helios({
