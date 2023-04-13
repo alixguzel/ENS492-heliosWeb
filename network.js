@@ -23,26 +23,40 @@ fetch('dataverse_files/networks/nodes/follower_profiles_2022-09.jsons.gz')
 // Edges are arrays of node ids
 const edges = [];
 
-fetch('dataverse_files/networks/edges')
-  .then(response => response.json())
-  .then(jsons => {
-    jsons.filter((filename) => filename.endsWith('.jsons.gz'))
-      .forEach((filename) => {
-        const id = filename.match(/(\d+)_network.jsons.gz/)[1];
-        fetch(`edges/${filename}`)
-          .then(response => response.blob())
-          .then(blob => {
-            const reader = new FileReader();
-            reader.onload = function() {
-              const json = JSON.parse(zlib.gunzipSync(reader.result).toString());
-              json.friends.forEach((friend) => {
-                edges.push({ source: friend, target: id });
-              });
-            };
-            reader.readAsText(blob);
-          });
-      });
+const mainFolder = "dataverse_files/networks/edges";
+
+function getFiles() {
+  return fetch(mainFolder)
+    .then((response) => response.json())
+    .then((data) => data.filter((file) => file.endsWith(".json.gz")));
+}
+
+function unzipFile(file) {
+  return fetch(`${mainFolder}/${file}`)
+    .then((response) => response.arrayBuffer())
+    .then((buffer) => pako.inflate(buffer, { to: "string" }))
+    .then((inflated) => JSON.parse(inflated));
+}
+
+function getFileName(file) {
+  return file.split("_")[0];
+}
+
+function processFile(file) {
+  return unzipFile(file).then((data) => {
+    const fileName = getFileName(file);
+    data.friends.forEach((friend) => {
+      edges.push({ source: friend, target: fileName });
+    });
   });
+}
+
+async function processFiles() {
+  const files = await getFiles();
+  await Promise.all(files.map(processFile));
+}
+
+processFiles().then(() => console.log(edges));
 
 console.log(edges);
 
