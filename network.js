@@ -23,6 +23,38 @@ fetch('dataverse_files/networks/nodes/follower_profiles_2022-09.jsons.gz')
 // Edges are arrays of node ids
 const edges = [];
 
+
+const filePath = "dataverse_files/networks/edges/2022-09/11711022_network.json.gz";
+
+function unzipFile(file) {
+  return fetch(file)
+    .then((response) => response.arrayBuffer())
+    .then((buffer) => pako.inflate(buffer, { to: "string" }))
+    .then((inflated) => JSON.parse(inflated));
+}
+
+function getFileName(file) {
+  return file.split("/").pop().split("_")[0];
+}
+
+function processFile(file) {
+  return unzipFile(file).then((data) => {
+    const fileName = getFileName(file);
+    data.friends.forEach((friend) => {
+      edges.push({ source: friend, target: fileName });
+    });
+  });
+}
+
+async function processFiles() {
+  await processFile(filePath);
+}
+
+processFiles().then(() => console.log(edges));
+
+
+
+/*
 const mainFolder = "dataverse_files/networks/edges/2022-09";
 
 function getFiles() {
@@ -59,7 +91,7 @@ async function processFiles() {
 processFiles().then(() => console.log(edges));
 
 console.log(edges);
-
+*/
 
 let helios = new Helios({
 elementID: "netviz", // ID of the element to render the network in
